@@ -147,7 +147,3 @@ Try pasting these text blocks into the app to test the logic engine:
 ## 📄 License
 
 This project is open-source and available under the MIT License.
-
-```
-
-```
