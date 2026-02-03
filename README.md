@@ -49,7 +49,7 @@ AutoGraph-Pro/
 ### 1. Clone the Repository
 
 ```bash
-git clone [https://github.com/YOUR_USERNAME/AutoGraph-Pro.git](https://github.com/YOUR_USERNAME/AutoGraph-Pro.git)
+git clone [https://github.com/Pranathi-N-47/AutoGraph.git](https://github.com/Pranathi-N-47/AutoGraph.git)
 cd AutoGraph-Pro
 
 ```
@@ -76,20 +76,7 @@ source venv/bin/activate
 
 ### 3. Install Dependencies
 
-Create a file named `requirements.txt` with the following content (or use the provided one):
-
-```text
-fastapi
-uvicorn
-streamlit
-streamlit-mermaid
-requests
-groq
-pydantic
-
-```
-
-Then install them:
+Run:
 
 ```bash
 pip install -r requirements.txt
