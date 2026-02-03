@@ -6,7 +6,7 @@
 ![Python](https://img.shields.io/badge/Python-3.11+-blue)
 ![Stack](https://img.shields.io/badge/Stack-Streamlit%20%7C%20FastAPI%20%7C%20Llama3-orange)
 
-## 📖 What It IS
+## 📖 What It Is
 
 Recognizing that manual diagramming is often time-consuming, AutoGraph leverages Large Language Models (LLMs) to perform **semantic logic extraction**—parsing complex paragraphs to identify actionable steps, conditional branches, and recurring loops. 
 
