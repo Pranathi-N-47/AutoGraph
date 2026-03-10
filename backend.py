@@ -6,6 +6,8 @@ import os
 import re
 import logging
 import dotenv
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 
 dotenv.load_dotenv()
 
@@ -14,6 +16,14 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("AutoGraph")
 
 app = FastAPI(title="AutoGraph API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], # Allows any frontend to connect
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class FlowchartRequest(BaseModel):
     text: str
@@ -97,6 +107,8 @@ IMPORTANT: Start the code with 'graph __ORIENTATION__'.
 - QUOTES: ALWAYS wrap node text in quotes "".
 - COMMENTS: DO NOT add any comments to the code.
 - ESCAPE: Retain special chars like '?' or '!' inside the quotes.
+- Always start with an action node and end with an action node.
+- An action node can branch into multiple nodes if there are parallel actions happening simultaneously.
 
 --- 2. ARROW RULES ---
 - Action -> Action: Plain arrow (A --> B)

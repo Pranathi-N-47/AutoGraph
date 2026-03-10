@@ -177,12 +177,8 @@ with col_diagram:
         action_color, decision_color, start_color, end_color
     )
     
-    # Inject Mermaid config to force it to use max available width
-    mermaid_config = "%%{init: {'theme': 'default', 'flowchart': {'width': '100%'}}}%%\n"
-    final_code = mermaid_config + colored_code
-    
     try:
-        st_mermaid(final_code, height="550px")
+        st_mermaid(colored_code, height="550px")
     except Exception:
         st.warning("Syntax Error in code")
 
