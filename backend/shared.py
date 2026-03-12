@@ -98,7 +98,10 @@ def validate_mermaid(code: str) -> tuple[bool, list[str]]:
 _MERMAID_SYNTAX_RULES = """--- MERMAID SYNTAX RULES ---
 - Rectangle nodes [] for actions/steps:   A["Label"]
 - Diamond nodes {} for decisions/checks:  B{"Label?"}
+_ NODE IDs: MUST be simple, single alphanumeric letters/words (e.g., A, B, Node1). NEVER use spaces, math symbols, or the full label text as the ID.
+- Decision nodes must have atleast 2 outgoing arrows.
 - ALWAYS wrap node text in double quotes.
+- LINE BREAKS: Use <br> inside node labels (e.g., ["i=0<br>swapped=false"]). NEVER use \\n.
 - DO NOT add comments to the code.
 - Action → Action:            plain arrow:           A --> B
 - Decision → Action/Decision: labeled arrow:         B -->|Yes| C  /  B -->|No| D
@@ -129,33 +132,23 @@ A -->|Success| C["Login"]"""
 
 
 _VISION_RULES = """--- VISION TRANSCRIPTION RULES ---
-- LABELS: Copy node labels exactly as written. Only fix obvious OCR noise.
-- SHAPES: Read from the image — rectangle/rounded → [], diamond → {}.
-- EDGE LABELS: Carry over any label on an arrow as |label|.
-- PROXIMITY WARNING: DO NOT connect nodes just because they are visually close to each other. ONLY connect them if a solid line and arrowhead physically links them.
-- ARROW DIRECTION IS ABSOLUTE: An arrow A → B means flow goes FROM A TO B only.
-  Never infer that B also connects back to A unless a separate arrow explicitly shows this.
-- ARROW TRACING (CRITICAL): Follow each line from its tail to its arrowhead. 
-- LONG-DISTANCE / LOOP ARROWS: Arrows that travel far across the diagram (e.g., going left, up, and right) are loop-backs. Trace the physical line carefully across the whole image to find which existing node the arrowhead touches.
-- TERMINAL NODES: A node with no outgoing arrow is terminal."""
+1. EXACT CONTENT: Copy text/math exactly (e.g., "swap(A[i], A[i+1])") into ONE node. Do not split equations into floating nodes.
+2. SHAPES: Rectangles/rounded → []. Nodes branching with Yes/No/True/False are ALWAYS diamonds {}.
+3. EDGE LABELS: Words floating near lines (Yes, No, Then, Else) are edge labels (e.g., -->|Yes|), NOT standalone nodes.
+4. STRICT TRACING: Connect nodes ONLY if physically linked by an arrow. Trace strictly from tail to head. Ignore visual proximity.
+5. LOOPS: Carefully trace long lines (especially up the left/right margins) connecting back to earlier nodes.
+6. ARROW-TO-ARROW: If arrow from a node points to another arrow's line, connect to the target node of that arrow.
+7. TERMINAL NODES: Nodes with no outgoing physical arrows are terminal."""
 
 _VISION_THINKING_BLOCK = (
     "--- REQUIRED THINKING PROCESS ---\n"
-    "You MUST begin your response with a <think> block structured exactly like this:\n\n"
+    "You MUST begin your response with a <think> block, but KEEP IT EXTREMELY BRIEF using SHORTHAND to minimize latency:\n\n"
     "<think>\n"
-    "NODES:\n"
-    "- N1 | <exact label> | <rectangle/diamond>\n"
-    "- N2 | <exact label> | <rectangle/diamond>\n"
-    "... (list every node)\n\n"
-    "ARROWS (Trace the physical line carefully!):\n"
-    "- Source: N1 | Path: [e.g., goes down] | Target: N2 | Label: <label or 'none'>\n"
-    "- Source: N3 | Path: [e.g., goes right] | Target: N4 | Label: <label or 'none'>\n"
-    "- Source: N5 | Path: [e.g., goes left, then up, then right] | Target: N2 | Label: <label or 'none'>\n"
-    "... (list every arrow — you MUST describe the line's path before stating the Target)\n\n"
-    "TERMINAL CHECK:\n"
-    "- For each node with no outgoing arrow: confirm it is visually terminal (no line leaving it).\n"
+    "SHAPES: [R]=\"Text\", {D}=\"Text\"\n"
+    "PATHS: [A] -> [B], {C} ->|Yes| [D]\n"
+    "MARGINS: Note bottom-to-top loop lines.\n"
     "</think>\n\n"
-    "After </think>, output ONLY the Mermaid code. No explanation, no fences.\n"
+    "After </think>, output ONLY the raw Mermaid.js code. No formatting ticks, no markdown."
 )
 
 

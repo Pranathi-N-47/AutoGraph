@@ -42,18 +42,22 @@ function applyColorsToMermaid(code) {
     const diamondRegex = /\b([A-Za-z_]\w*)\s*\{/g;
     const arrowRegex   = /\b([A-Za-z_]\w*)\s*(?:\[[^\]]*\]|\{[^\}]*\}|\([^\)]*\))?\s*--/g;
 
-    lines.slice(1).forEach(line => {
+    // Parse nodes
+     lines.slice(1).forEach(line => {
+        // Ignore text inside quotes so we don't accidentally match code/math as Node IDs
+        const strippedLine = line.replace(/"[^"]*"/g, '""');
+                
         let match;
         const nodeRx = new RegExp(nodeRegex);
-        while ((match = nodeRx.exec(line)) !== null) {
-            if (!seen.has(match[1]) && !["graph","flowchart","style","classDef","click"].includes(match[1])) {
-                seen.add(match[1]); nodeIds.push(match[1]);
-            }
+        while ((match = nodeRx.exec(strippedLine)) !== null) {
+            if (!seen.has(match[1]) && !["graph", "flowchart", "style", "classDef", "click"].includes(match[1])) {
+                seen.add(match[1]); nodeIds.push(match[1]);                }
         }
         const diamondRx = new RegExp(diamondRegex);
-        while ((match = diamondRx.exec(line)) !== null) decisionNodes.add(match[1]);
+        while ((match = diamondRx.exec(strippedLine)) !== null) decisionNodes.add(match[1]);
+                
         const arrowRx = new RegExp(arrowRegex);
-        while ((match = arrowRx.exec(line)) !== null) outgoing.add(match[1]);
+        while ((match = arrowRx.exec(strippedLine)) !== null) outgoing.add(match[1]);
     });
 
     const terminalNodes = new Set([...nodeIds].filter(x => !outgoing.has(x)));
