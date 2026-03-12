@@ -155,13 +155,40 @@
             font-weight: bold;
         }
 
+        #image-preview-container {
+            display: none;
+            position: relative;
+            margin-top: 15px;
+        }
+
         #image-preview-thumb {
             max-height: 160px;
             max-width: 100%;
             border-radius: 6px;
-            margin-top: 10px;
-            display: none;
             border: 1px solid #ddd;
+            display: block;
+        }
+
+        #btn-remove-image {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 12px;
+            line-height: 24px;
+            text-align: center;
+            padding: 0;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        #btn-remove-image:hover {
+            background: #d32f2f;
         }
 
         /* --- 30/70 SPLIT LAYOUT --- */
@@ -239,27 +266,6 @@
             <textarea id="user-text" rows="5">To make coffee: Grind beans. Boil water. Pour water over grounds.</textarea>
 
             <div class="config-row">
-                <div>
-                    <label><b>Orientation:</b></label><br>
-                    <select id="orientation" style="padding: 5px; margin-top: 5px;">
-                        <option value="TD">Top-Down (Vertical)</option>
-                        <option value="LR">Left-Right (Horizontal)</option>
-                    </select>
-                </div>
-
-                <div class="color-pickers">
-                    <div class="color-item"><label>Action</label><input type="color" id="col-action" value="#4CAF50"></div>
-                    <div class="color-item"><label>Decision</label><input type="color" id="col-decision" value="#2196F3"></div>
-                    <div class="color-item"><label>Start</label><input type="color" id="col-start" value="#9C27B0"></div>
-                    <div class="color-item"><label>End</label><input type="color" id="col-end" value="#F44336"></div>
-                    <div class="color-item"><label>Text</label><input type="color" id="col-text" value="#ffffff"></div>
-                </div>
-
-                <div style="font-size: 14px; display: flex; align-items: center; gap: 5px;">
-                    <input type="checkbox" id="unified-colors">
-                    <label for="unified-colors">Use Action colour for Start and End nodes</label>
-                </div>
-
                 <div style="margin-left: auto;">
                     <button id="btn-generate">Generate Flowchart</button>
                 </div>
@@ -281,21 +287,46 @@
                     <div style="font-size: 12px; color: #999; margin-top: 4px;">PNG · JPG · WEBP · GIF</div>
                 </div>
             </div>
-            <img id="image-preview-thumb" alt="Preview">
+            <div id="image-preview-container">
+                <img id="image-preview-thumb" alt="Preview">
+                <button id="btn-remove-image" title="Remove Image">✕</button>
+            </div>
 
             <div class="config-row" style="margin-top: 14px;">
-                <div>
-                    <label><b>Orientation:</b></label><br>
-                    <select id="vision-orientation" style="padding: 5px; margin-top: 5px;">
-                        <option value="TD">Top-Down (Vertical)</option>
-                        <option value="LR">Left-Right (Horizontal)</option>
-                    </select>
-                </div>
                 <div style="margin-left: auto;">
                     <button id="btn-generate-image" disabled>Convert Image</button>
                 </div>
             </div>
             <div class="status-msg" id="status-vision"></div>
+        </div>
+    </div>
+
+    <!-- ========== COMMON SETTINGS ========== -->
+    <div class="config-panel" style="border-radius: 8px;">
+        <h3>Diagram Settings</h3>
+        <div class="config-row">
+            <div>
+                <label><b>Orientation:</b></label><br>
+                <select id="orientation" style="padding: 5px; margin-top: 5px;">
+                    <option value="TD">Top-Down (Vertical)</option>
+                    <option value="LR">Left-Right (Horizontal)</option>
+                    <option value="BT">Bottom-Up (Vertical)</option>
+                    <option value="RL">Right-Left (Horizontal)</option>
+                </select>
+            </div>
+
+            <div class="color-pickers">
+                <div class="color-item"><label>Action</label><input type="color" id="col-action" value="#4CAF50"></div>
+                <div class="color-item"><label>Decision</label><input type="color" id="col-decision" value="#2196F3"></div>
+                <div class="color-item"><label>Start</label><input type="color" id="col-start" value="#9C27B0"></div>
+                <div class="color-item"><label>End</label><input type="color" id="col-end" value="#F44336"></div>
+                <div class="color-item"><label>Text</label><input type="color" id="col-text" value="#ffffff"></div>
+            </div>
+
+            <div style="font-size: 14px; display: flex; align-items: center; gap: 5px;">
+                <input type="checkbox" id="unified-colors">
+                <label for="unified-colors">Use Action colour for Start and End nodes</label>
+            </div>
         </div>
     </div>
 

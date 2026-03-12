@@ -128,6 +128,15 @@ document.getElementById('mermaid-code').addEventListener('input', renderDiagram)
     document.getElementById(id).addEventListener('input', renderDiagram);
 });
 
+document.getElementById('orientation').addEventListener('change', (e) => {
+    const newOrientation = e.target.value;
+    const codeInput = document.getElementById('mermaid-code');
+    let code = codeInput.value;
+    code = code.replace(/^(graph|flowchart)\s+(TD|LR|BT|RL)/im, `$1 ${newOrientation}`);
+    codeInput.value = code;
+    renderDiagram();
+});
+
 document.getElementById('btn-generate').addEventListener('click', async () => {
     const btn         = document.getElementById('btn-generate');
     const statusMsg   = document.getElementById('status-text');
@@ -185,15 +194,22 @@ imageInput.addEventListener('change', handleFileSelect);
 function handleFileSelect() {
     const file = imageInput.files[0];
     if (!file) return;
-    imageThumb.src          = URL.createObjectURL(file);
-    imageThumb.style.display = 'block';
-    btnGenImage.disabled    = false;
+    imageThumb.src = URL.createObjectURL(file);
+    document.getElementById('image-preview-container').style.display = 'inline-block';
+    btnGenImage.disabled = false;
 }
+
+document.getElementById('btn-remove-image').addEventListener('click', () => {
+    imageInput.value = '';
+    imageThumb.src = '';
+    document.getElementById('image-preview-container').style.display = 'none';
+    btnGenImage.disabled = true;
+});
 
 btnGenImage.addEventListener('click', async () => {
     const file        = imageInput.files[0];
     const statusMsg   = document.getElementById('status-vision');
-    const orientation = document.getElementById('vision-orientation').value;
+    const orientation = document.getElementById('orientation').value;
 
     if (!file) { statusMsg.innerText = 'Please select an image first.'; return; }
 
