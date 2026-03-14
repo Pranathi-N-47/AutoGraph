@@ -12,12 +12,30 @@ function switchTab(name) {
 }
 
 // =====================================================================
+// DARK / LIGHT MODE
+// =====================================================================
+const themeBtn   = document.getElementById('btn-theme');
+const isDark     = () => document.body.classList.contains('dark');
+
+function applyTheme(dark) {
+    document.body.classList.toggle('dark', dark);
+    themeBtn.textContent = dark ? '☀️ Light Mode' : '🌙 Dark Mode';
+    localStorage.setItem('ag-theme', dark ? 'dark' : 'light');
+}
+
+// Restore saved preference on load
+applyTheme(localStorage.getItem('ag-theme') === 'dark');
+
+themeBtn.addEventListener('click', () => applyTheme(!isDark()));
+
+// =====================================================================
 // MERMAID INIT
 // =====================================================================
 mermaid.initialize({
     startOnLoad: false,
     theme: 'default',
-    flowchart: { htmlLabels: false }
+    flowchart: { htmlLabels: false },
+    suppressErrors: true
 });
 
 let panZoomInstance = null;
@@ -82,6 +100,7 @@ async function renderDiagram() {
     const rawCode     = document.getElementById('mermaid-code').value;
     const coloredCode = applyColorsToMermaid(rawCode);
     const container   = document.getElementById('diagram-preview');
+    const errorBanner = document.getElementById('syntax-error-banner');
 
     try {
         if (panZoomInstance) { panZoomInstance.destroy(); panZoomInstance = null; }
@@ -107,9 +126,17 @@ async function renderDiagram() {
             maxZoom: 50,
             zoomScaleSensitivity: 0.2
         });
+
+        // Hide the error banner once the code is valid
+        errorBanner.style.display = 'none';
+
     } catch (err) {
         console.error(err);
-        container.innerHTML = `<div style="color:red; padding: 20px;">Syntax Error in Mermaid Code</div>`;
+        container.innerHTML = '';
+        // Remove any error SVGs Mermaid injects directly into the document body
+        document.querySelectorAll('body > [id^="d"]').forEach(el => el.remove());
+        // Show the error banner near the code area
+        errorBanner.style.display = 'block';
     }
 }
 

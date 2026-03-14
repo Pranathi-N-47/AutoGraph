@@ -10,21 +10,89 @@
     <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
 
     <style>
+        /* --- CSS VARIABLES (Light Mode) --- */
+        :root {
+            --bg:           #ffffff;
+            --surface:      #f9f9f9;
+            --surface2:     #f4f4f4;
+            --border:       #ddd;
+            --border2:      #ccc;
+            --text:         #333;
+            --text-muted:   #555;
+            --text-faint:   #666;
+            --tab-bg:       #f0f0f0;
+            --tab-hover:    #e0e0e0;
+            --tab-active:   #ffffff;
+            --preview-bg:   #fcfcfc;
+            --preview-dot:  #d0d0d0;
+            --upload-bg:    #fafafa;
+            --accent:       #4CAF50;
+            --accent-hover: #45a049;
+            --hr:           #ddd;
+        }
+
+        /* --- DARK MODE OVERRIDES --- */
+        body.dark {
+            --bg:           #1a1a2e;
+            --surface:      #16213e;
+            --surface2:     #0f3460;
+            --border:       #2d3561;
+            --border2:      #2d3561;
+            --text:         #e0e0e0;
+            --text-muted:   #aaa;
+            --text-faint:   #999;
+            --tab-bg:       #16213e;
+            --tab-hover:    #0f3460;
+            --tab-active:   #1a1a2e;
+            --preview-bg:   #1a1a2e;
+            --preview-dot:  #2d3561;
+            --upload-bg:    #16213e;
+            --hr:           #2d3561;
+        }
+
         /* --- GLOBAL STYLES --- */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #ffffff;
-            color: #333;
+            background-color: var(--bg);
+            color: var(--text);
             margin: 0;
             padding: 20px 40px;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         h1, h3 { margin-top: 0; }
 
         hr {
             border: 0;
-            border-top: 1px solid #ddd;
+            border-top: 1px solid var(--hr);
             margin: 20px 0;
+        }
+
+        /* --- THEME TOGGLE --- */
+        .header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0;
+        }
+
+        #btn-theme {
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 7px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        #btn-theme:hover {
+            background: var(--tab-hover);
         }
 
         /* --- TABS --- */
@@ -32,13 +100,13 @@
             display: flex;
             gap: 4px;
             margin-bottom: 0;
-            border-bottom: 2px solid #ddd;
+            border-bottom: 2px solid var(--border);
         }
 
         .tab-btn {
-            background: #f0f0f0;
-            color: #555;
-            border: 1px solid #ddd;
+            background: var(--tab-bg);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
             border-bottom: none;
             padding: 10px 24px;
             border-radius: 6px 6px 0 0;
@@ -48,13 +116,13 @@
             transition: background 0.15s;
         }
 
-        .tab-btn:hover { background: #e0e0e0; }
+        .tab-btn:hover { background: var(--tab-hover); }
 
         .tab-btn.active {
-            background: #fff;
-            color: #4CAF50;
-            border-color: #ddd;
-            border-bottom-color: #fff;
+            background: var(--tab-active);
+            color: var(--accent);
+            border-color: var(--border);
+            border-bottom-color: var(--tab-active);
             margin-bottom: -2px;
         }
 
@@ -63,10 +131,10 @@
 
         /* --- CONFIG PANEL --- */
         .config-panel {
-            background: #f9f9f9;
+            background: var(--surface);
             padding: 20px;
             border-radius: 0 8px 8px 8px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--border);
             margin-bottom: 20px;
         }
 
@@ -81,12 +149,25 @@
         textarea {
             width: 100%;
             padding: 10px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--border2);
             border-radius: 4px;
             font-family: inherit;
             resize: vertical;
             box-sizing: border-box;
+            background: var(--bg);
+            color: var(--text);
+            transition: background 0.3s, color 0.3s, border-color 0.3s;
         }
+
+        select {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border2);
+            border-radius: 4px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        label { color: var(--text); }
 
         .color-pickers {
             display: flex;
@@ -101,7 +182,7 @@
         }
 
         button {
-            background-color: #4CAF50;
+            background-color: var(--accent);
             color: white;
             border: none;
             padding: 12px 24px;
@@ -111,18 +192,18 @@
             transition: background 0.2s;
         }
 
-        button:hover { background-color: #45a049; }
+        button:hover { background-color: var(--accent-hover); }
 
         button:disabled {
-            background-color: #ccc;
+            background-color: #777;
             cursor: not-allowed;
         }
 
         /* --- IMAGE UPLOAD AREA --- */
         .upload-area {
-            border: 2px dashed #bbb;
+            border: 2px dashed var(--border);
             border-radius: 8px;
-            background: #fafafa;
+            background: var(--upload-bg);
             padding: 30px;
             text-align: center;
             cursor: pointer;
@@ -131,8 +212,12 @@
         }
 
         .upload-area:hover, .upload-area.dragover {
-            border-color: #4CAF50;
+            border-color: var(--accent);
             background: #f0fff0;
+        }
+
+        body.dark .upload-area:hover, body.dark .upload-area.dragover {
+            background: #1e3a2f;
         }
 
         .upload-area input[type="file"] {
@@ -146,12 +231,12 @@
 
         .upload-area .upload-label {
             font-size: 15px;
-            color: #666;
+            color: var(--text-faint);
             pointer-events: none;
         }
 
         .upload-area .upload-label span {
-            color: #4CAF50;
+            color: var(--accent);
             font-weight: bold;
         }
 
@@ -165,7 +250,7 @@
             max-height: 160px;
             max-width: 100%;
             border-radius: 6px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--border);
             display: block;
         }
 
@@ -187,9 +272,7 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
-        #btn-remove-image:hover {
-            background: #d32f2f;
-        }
+        #btn-remove-image:hover { background: #d32f2f; }
 
         /* --- 30/70 SPLIT LAYOUT --- */
         .editor-container {
@@ -213,20 +296,23 @@
         #mermaid-code {
             flex-grow: 1;
             font-family: "Courier New", Courier, monospace;
-            background: #f4f4f4;
+            background: var(--surface2);
+            color: var(--text);
             white-space: pre;
+            transition: background 0.3s, color 0.3s;
         }
 
         #diagram-preview {
             flex-grow: 1;
-            border: 1px solid #ddd;
+            border: 1px solid var(--border);
             border-radius: 8px;
-            background-color: #fcfcfc;
-            background-image: radial-gradient(#d0d0d0 1px, transparent 1px);
+            background-color: var(--preview-bg);
+            background-image: radial-gradient(var(--preview-dot) 1px, transparent 1px);
             background-size: 20px 20px;
             overflow: hidden;
             position: relative;
             cursor: grab;
+            transition: background-color 0.3s;
         }
 
         #diagram-preview:active { cursor: grabbing; }
@@ -245,12 +331,33 @@
             font-weight: bold;
             min-height: 20px;
         }
+
+        #syntax-error-banner {
+            display: none;
+            background: #fff3f3;
+            border: 1px solid #f44336;
+            border-left: 4px solid #f44336;
+            color: #b71c1c;
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 13px;
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+
+        body.dark #syntax-error-banner {
+            background: #2c1010;
+            color: #ff8a80;
+        }
     </style>
 </head>
 
 <body>
 
-    <h1>AutoGraph - Automated Diagramming Engine</h1>
+    <div class="header-row">
+        <h1>AutoGraph - Automated Diagramming Engine</h1>
+        <button id="btn-theme">🌙 Dark Mode</button>
+    </div>
     <hr>
 
     <!-- ========== TABS ========== -->
@@ -262,7 +369,7 @@
     <!-- ========== TEXT TAB ========== -->
     <div id="tab-text" class="tab-panel active">
         <div class="config-panel">
-            <h3>Configuration &amp; Input Logic</h3>
+            <h3>Input Text</h3>
             <textarea id="user-text" rows="5">To make coffee: Grind beans. Boil water. Pour water over grounds.</textarea>
 
             <div class="config-row">
@@ -334,6 +441,7 @@
     <div class="editor-container">
         <div class="code-col">
             <h3>Code</h3>
+            <div id="syntax-error-banner">⚠️ Syntax Error in Mermaid Code</div>
             <textarea id="mermaid-code">graph TD&#10; A["Start"] --> B["Your Flowchart"]</textarea>
         </div>
         <div class="diagram-col">
